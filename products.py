@@ -138,8 +138,6 @@ class Product:
             self.__buy_product(quantity)
         except ValueError as value_error:
             print(f"Value Error: {value_error}")
-        except Exception as general_exception:
-            print(f"An error occurred: {general_exception}")
         else:
             return quantity * self.get_price()
 

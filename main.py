@@ -116,7 +116,7 @@ def quit_app(best_buy: Store):
     """
     Function to exit application
     """
-    pass
+    best_buy = []
 
 
 def select_options(user_choice: str, best_buy: Store) -> None:
