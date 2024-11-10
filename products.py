@@ -120,7 +120,7 @@ class Product:
         """
         self.set_quantity(self.get_quantity() - given_quantity)
 
-    def buy(self, quantity: int):
+    def buy(self, quantity: int) -> float:
         """
         Buys a given quantity of the product and updates inventory.
 
@@ -136,10 +136,10 @@ class Product:
         try:
             # Buys a given quantity of the product.
             self.__buy_product(quantity)
-        except ValueError as e:
-            print(f"Value Error: {e}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+        except ValueError as value_error:
+            print(f"Value Error: {value_error}")
+        except Exception as general_exception:
+            print(f"An error occurred: {general_exception}")
         else:
             return quantity * self.get_price()
 

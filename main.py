@@ -52,7 +52,7 @@ def print_products(best_buy: Store) -> dict:
     Returns:
         dict: A dictionary mapping product numbers to product instances.
     """
-    list_products_for_order = dict()
+    list_products_for_order = {}
     print("------")
     for count, product in enumerate(best_buy.get_all_products(), start=1):
         if product.is_active():
@@ -99,8 +99,8 @@ def make_order(best_buy: Store):
 
     try:
         best_buy.validate_order(list_products_for_order)
-    except ValueError as e:
-        print(e)
+    except ValueError as validate_order:
+        print(validate_order)
     else:
         if list_products_for_order:
             print("********")
@@ -113,6 +113,9 @@ def make_order(best_buy: Store):
 
 
 def quit_app(best_buy: Store):
+    """
+    Function to exit application
+    """
     pass
 
 
