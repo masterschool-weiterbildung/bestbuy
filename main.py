@@ -175,7 +175,7 @@ def call_menu() -> str:
                 raise ValueError()
 
         except ValueError:
-            print("Invalid choice\n")
+            print()
         else:
             break
 
