@@ -103,10 +103,12 @@ def make_order(best_buy: Store):
     except ValueError as e:
         print(e)
     else:
-        if list_products_for_order != "":
+        if list_products_for_order:
             print("********")
             print(
                 f"Order made! Total payment: ${best_buy.order(list_products_for_order)}\n")
+        else:
+            print("\n")
 
     select_options(call_menu(), best_buy)
 
