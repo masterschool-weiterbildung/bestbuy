@@ -20,18 +20,39 @@ def print_menu() -> None:
 
 
 def list_products(best_buy: Store):
+    """
+    List all active products available in the store.
+
+    Parameter:
+        best_buy (Store): The store instance with products.
+    """
     list_products_for_order: dict = print_products(best_buy)
 
     select_options(call_menu(), best_buy)
 
 
 def show_items_in_store(best_buy):
+    """
+    Display the total quantity of items available in the store.
+
+    Parameter:
+        best_buy (Store): The store instance with products.
+    """
     print(f"Total of {best_buy.get_total_quantity()} items in store\n")
 
     select_options(call_menu(), best_buy)
 
 
 def print_products(best_buy: Store) -> dict:
+    """
+    Display all active products and return a dictionary for ordering.
+
+    Parameter:
+        best_buy (Store): The store instance with products.
+
+    Returns:
+        dict: A dictionary mapping product numbers to product instances.
+    """
     list_products_for_order = dict()
     print("------")
     for count, product in enumerate(best_buy.get_all_products(), start=1):
@@ -43,6 +64,15 @@ def print_products(best_buy: Store) -> dict:
 
 
 def make_order(best_buy: Store):
+    """
+    Display all active products and return a dictionary for ordering.
+
+    Parameter:
+        best_buy (Store): The store instance with products.
+
+    Returns:
+        dict: A dictionary mapping product numbers to product instances.
+    """
     dict_products_for_order: dict = print_products(best_buy)
     print("When you want to finish order, enter empty text.")
     list_products_for_order = []
@@ -86,6 +116,13 @@ def quit_app(best_buy: Store):
 
 
 def select_options(user_choice: str, best_buy: Store) -> None:
+    """
+    Execute the function based on the user's menu selection.
+
+    Parameters:
+        user_choice (str): The menu option chosen by the user.
+        best_buy (Store): The store instance with products.
+    """
     func_dict = {
         f"{LIST_PRODUCTS}":
             list_products,
@@ -103,13 +140,25 @@ def select_options(user_choice: str, best_buy: Store) -> None:
         func_dict[user_choice](best_buy)
 
 
-def return_options():
+def return_options() -> list:
+    """
+    Returns the list of valid menu options.
+
+    Returns:
+        list: A list of menu options as strings.
+    """
     return [
         LIST_PRODUCTS, LIST_ITEMS, MAKE_ORDER, EXIT_APP
     ]
 
 
 def call_menu() -> str:
+    """
+    Display the menu and get user input for menu selection.
+
+    Returns:
+        str: The user's chosen menu option.
+    """
     while True:
         try:
             print_menu()
@@ -133,10 +182,19 @@ def call_menu() -> str:
 
 
 def start(best_buy: Store):
+    """
+    Start the menu selection loop for the store.
+
+    Parameter:
+        best_buy (Store): The store instance with products.
+    """
     select_options(call_menu(), best_buy)
 
 
 def main():
+    """
+    Main function to initialize products and start the store application.
+    """
     product_list = [
         products.Product("MacBook Air M2", price=1450, quantity=100),
         products.Product("Bose QuietComfort Earbuds", price=250,
