@@ -69,8 +69,7 @@ class Product:
 
     def __str__(self):
         return (f"{self.get_name()}, Price: {self.get_price()},"
-                f" Quantity: {self.get_quantity()}"
-                f" Is_Active: {self.is_active()}")
+                f" Quantity: {self.get_quantity()}")
 
     def __eq__(self, other):
         if isinstance(other, Product):
