@@ -1,6 +1,5 @@
 import products
 import store
-from products import Product
 from store import Store
 
 LIST_PRODUCTS = "1"
@@ -26,7 +25,7 @@ def list_products(best_buy: Store):
     Parameter:
         best_buy (Store): The store instance with products.
     """
-    list_products_for_order: dict = print_products(best_buy)
+    print_products(best_buy)
 
     select_options(call_menu(), best_buy)
 
