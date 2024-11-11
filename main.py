@@ -1,6 +1,6 @@
 import products
 import store
-from store import Store
+from util import order_product, validate_order_util, print_products
 
 LIST_PRODUCTS = "1"
 LIST_ITEMS = "2"
@@ -18,7 +18,7 @@ def print_menu() -> None:
     print("4. Quit\n")
 
 
-def list_products(best_buy: Store):
+def list_products(best_buy: store.Store):
     """
     List all active products available in the store.
 
@@ -42,84 +42,22 @@ def show_items_in_store(best_buy):
     select_options(call_menu(), best_buy)
 
 
-def print_products(best_buy: Store) -> dict:
-    """
-    Display all active products and return a dictionary for ordering.
+def make_order(best_buy: store.Store):
+    list_products_for_order = order_product(best_buy)
 
-    Parameter:
-        best_buy (Store): The store instance with products.
-
-    Returns:
-        dict: A dictionary mapping product numbers to product instances.
-    """
-    list_products_for_order = {}
-    print("------")
-    for count, product in enumerate(best_buy.get_all_products(), start=1):
-        if product.is_active():
-            print(f"{str(count)}. {product}")
-            list_products_for_order[str(count)] = product
-    print("------\n")
-    return list_products_for_order
-
-
-def make_order(best_buy: Store):
-    """
-    Display all active products and return a dictionary for ordering.
-
-    Parameter:
-        best_buy (Store): The store instance with products.
-
-    Returns:
-        dict: A dictionary mapping product numbers to product instances.
-    """
-    dict_products_for_order: dict = print_products(best_buy)
-    print("When you want to finish order, enter empty text.")
-    list_products_for_order = []
-
-    while True:
-        try:
-            input_product: str = input("Which product # do you want? ")
-            input_quantity_order: str = input("What amount do you want? ")
-
-            if input_product == "" or input_quantity_order == "":
-                break
-
-            if input_product not in dict_products_for_order.keys():
-                raise ValueError()
-
-            order = (
-                dict_products_for_order[input_product],
-                int(input_quantity_order))
-
-            list_products_for_order.append(order)
-
-            print("Product added to list!\n")
-        except ValueError:
-            print("Error adding product!\n")
-
-    try:
-        best_buy.validate_order(list_products_for_order)
-    except ValueError as validate_order:
-        print(validate_order)
-    else:
-        if list_products_for_order:
-            print("********")
-            print(
-                f"Order made! Total payment: ${best_buy.order(list_products_for_order)}\n")
-        else:
-            print("\n")
+    best_buy = validate_order_util(best_buy, list_products_for_order)
 
     select_options(call_menu(), best_buy)
 
 
-def quit_app(best_buy: Store):
+def quit_app(best_buy: store.Store):
     """
     Function to exit application
     """
     best_buy = []
 
 
-def select_options(user_choice: str, best_buy: Store) -> None:
+def select_options(user_choice: str, best_buy: store.Store) -> None:
     """
     Execute the function based on the user's menu selection.
 
@@ -185,7 +123,7 @@ def call_menu() -> str:
     return input_available_commands
 
 
-def start(best_buy: Store):
+def start(best_buy: store.Store):
     """
     Start the menu selection loop for the store.
 
