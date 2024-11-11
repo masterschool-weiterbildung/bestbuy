@@ -13,6 +13,8 @@ def setup_data():
     Creates a list of sample products and initializes a store with these products.
     Yields the store instance to the test functions and performs teardown after tests complete.
 
+    Add in github comment, add unit tests
+
     Returns:
         Store: An instance of the Store class with preloaded products.
     """
