@@ -135,7 +135,7 @@ class Product:
         """
         try:
             # Buys a given quantity of the product.
-            self.__buy_product(quantity)
+            self.set_quantity(quantity)
         except ValueError as value_error:
             print(f"Value Error: {value_error}")
         else:
