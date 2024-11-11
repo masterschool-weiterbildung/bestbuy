@@ -1,6 +1,7 @@
 import pytest
 
-import products
+from products import Product
+
 import store
 
 
@@ -16,10 +17,10 @@ def setup_data():
         Store: An instance of the Store class with preloaded products.
     """
     product_list = [
-        products.Product("MacBook Air M2", price=1450, quantity=100),
-        products.Product("Bose QuietComfort Earbuds", price=250,
+        Product("MacBook Air M2", price=1450, quantity=100),
+        Product("Bose QuietComfort Earbuds", price=250,
                          quantity=500),
-        products.Product("Google Pixel 7", price=500, quantity=250)
+        Product("Google Pixel 7", price=500, quantity=250)
     ]
 
     best_buy = store.Store(product_list)
@@ -37,7 +38,7 @@ class TestPRODUCT:
 
     @pytest.mark.parametrize("product",
                              [
-                                 products.Product("MacBook Air M2",
+                                 Product("MacBook Air M2",
                                                   price=1450, quantity=100)
                              ]
                              )
@@ -111,7 +112,7 @@ class TestPRODUCT:
 
     @pytest.mark.parametrize("product",
                              [
-                                 products.Product("MacBook Air M2",
+                                 Product("MacBook Air M2",
                                                   price=1450, quantity=100)
                              ]
                              )
@@ -143,7 +144,7 @@ class TestPRODUCT:
 
     @pytest.mark.parametrize("product",
                              [
-                                 products.Product("MacBook Air M2",
+                                 Product("MacBook Air M2",
                                                   price=1450, quantity=100)
                              ]
                              )
