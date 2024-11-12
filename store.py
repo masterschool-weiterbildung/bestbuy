@@ -1,4 +1,5 @@
-from products import Product
+from products import Product, LimitedProduct
+from collections import Counter, defaultdict
 
 
 class Store:
@@ -94,10 +95,21 @@ class Store:
             ValueError: If the requested quantity exceeds available
                         stock for any product.
         """
+        aggregated = defaultdict(int)
+
         for product, order in shopping_list:
             if product.get_quantity() < order:
                 raise ValueError(
                     "Error while making order! Quantity larger than what exists\n")
+
+            if isinstance(product, LimitedProduct):
+                aggregated[product] += order
+
+        if isinstance(product, LimitedProduct):
+            for product in aggregated:
+                if aggregated[product] > product.get_maximum():
+                    raise ValueError(
+                        f"Error while making order! The maximum order is {product.get_maximum()}\n")
 
     def get_products(self):
         """

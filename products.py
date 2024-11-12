@@ -135,7 +135,7 @@ class Product:
         """
         try:
             # Buys a given quantity of the product.
-            self.set_quantity(quantity)
+            self.__buy_product(quantity)
         except ValueError as value_error:
             print(f"Value Error: {value_error}")
         else:
@@ -150,6 +150,15 @@ class Product:
         Returns:
             str: A formatted string with the product's name, price, and quantity.
         """
+        if isinstance(self, LimitedProduct):
+            return (f"{self.get_name()}, Price: {self.get_price()},"
+                    f" Quantity: {self.get_quantity()},"
+                    f" Maximum: {self.get_maximum()}")
+
+        if isinstance(self, NonStockedProduct):
+            return (f"{self.get_name()}, Price: {self.get_price()}")
+
+
         return (f"{self.get_name()}, Price: {self.get_price()},"
                 f" Quantity: {self.get_quantity()}")
 
@@ -168,3 +177,36 @@ class Product:
                     and self.get_price() == other.get_price()
                     )
         return False
+
+    def __hash__(self):
+        return hash(self.__name)
+
+
+class NonStockedProduct(Product):
+    def __init__(self, name: str, price: float):
+        self.__name = name  # Private attribute, encapsulation
+        self.__price = price
+        super().__init__(self.__name, self.__price,
+                         0)
+
+
+class LimitedProduct(Product):
+    def __init__(self, name: str, price: float, quantity: int, maximum: int):
+        self.__name = name  # Private attribute, encapsulation
+        self.__price = price
+        self.__quantity = quantity
+        self.__maximum = maximum
+        super().__init__(self.__name, self.__price,
+                         self.__quantity)
+
+    def get_maximum(self):
+        return self.__maximum
+
+    def set_maximum(self, maximum: int):
+        if isinstance(maximum, str) and maximum >= 0:
+            self.__maximum = maximum
+        else:
+            raise ValueError("Quantity must be a int")
+
+    def __hash__(self):
+        return hash(self.__name)
