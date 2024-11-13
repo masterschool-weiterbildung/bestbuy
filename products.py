@@ -1,3 +1,6 @@
+from promotions import Promotion
+
+
 class Product:
     """
     A class to represent a product with attributes for name, price, and quantity.
@@ -19,10 +22,20 @@ class Product:
             price (float): The price of the product.
             quantity (int): The available quantity of the product.
         """
-        self.__name = name  # Private attribute, encapsulation
-        self.__price = price
-        self.__quantity = quantity
-        self.__is_active = True
+        self.__promotion: Promotion = None
+        self.__name: str = name  # Private attribute, encapsulation
+        self.__price: float = price
+        self.__quantity: int = quantity
+        self.__is_active: bool = True
+
+    def get_promotion(self):
+        return self.__promotion
+
+    def set_promotion(self, promotion: Promotion):
+        if isinstance(promotion, Promotion) and promotion:
+            self.__promotion = promotion
+        else:
+            raise ValueError("Promotion must be a non-empty")
 
     def get_name(self):
         """Returns the product's name."""
@@ -121,24 +134,15 @@ class Product:
         self.set_quantity(self.get_quantity() - given_quantity)
 
     def buy(self, quantity: int) -> float:
-        """
-        Buys a given quantity of the product and updates inventory.
-
-        Parameter:
-            quantity (int): The quantity to purchase.
-
-        Returns:
-            float: The total cost of the purchase.
-
-        Raises:
-            ValueError: If quantity is invalid or exceeds stock.
-        """
         try:
-            # Buys a given quantity of the product.
-            self.__buy_product(quantity)
+            # Buys a given quantity of the product. Skip if NonStockedProduct
+            if not isinstance(self, NonStockedProduct):
+                self.__buy_product(quantity)
         except ValueError as value_error:
             print(f"Value Error: {value_error}")
         else:
+            if self.get_promotion():
+                return self.get_promotion().apply_promotion(self, quantity)
             return quantity * self.get_price()
 
     def show(self):
@@ -150,17 +154,32 @@ class Product:
         Returns:
             str: A formatted string with the product's name, price, and quantity.
         """
-        if isinstance(self, LimitedProduct):
+        if self.get_promotion():
             return (f"{self.get_name()}, Price: {self.get_price()},"
                     f" Quantity: {self.get_quantity()},"
-                    f" Maximum: {self.get_maximum()}")
+                    f" Promotion: {self.get_promotion().get_name()}")
 
-        if isinstance(self, NonStockedProduct):
-            return (f"{self.get_name()}, Price: {self.get_price()}")
+        elif isinstance(self, LimitedProduct):
+            if self.get_promotion():
+                return (f"{self.get_name()}, Price: {self.get_price()},"
+                        f" Quantity: {self.get_quantity()},"
+                        f" Maximum: {self.get_maximum()},"
+                        f" Promotion: {self.get_promotion().get_name()}")
+            else:
+                return (f"{self.get_name()}, Price: {self.get_price()},"
+                        f" Quantity: {self.get_quantity()},"
+                        f" Maximum: {self.get_maximum()}")
 
-
-        return (f"{self.get_name()}, Price: {self.get_price()},"
-                f" Quantity: {self.get_quantity()}")
+        elif isinstance(self, NonStockedProduct):
+            if self.get_promotion():
+                return (f"{self.get_name()}, Price: {self.get_price()},"
+                        f" Promotion: {self.get_promotion().get_name()}")
+            else:
+                return (f"{self.get_name()}, Price: {self.get_price()},"
+                        f" Quantity: {self.get_quantity()}")
+        else:
+            return (f"{self.get_name()}, Price: {self.get_price()},"
+                    f" Quantity: {self.get_quantity()}")
 
     def __eq__(self, other):
         """

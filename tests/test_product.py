@@ -1,8 +1,10 @@
 import pytest
 
 import products
+import promotions
 
 import store
+from promotions import SecondHalfPrice
 
 
 @pytest.fixture
@@ -24,8 +26,18 @@ def setup_data():
                          quantity=500),
         products.Product("Google Pixel 7", price=500, quantity=250),
         products.NonStockedProduct("Windows License", price=125),
-        products.LimitedProduct("Shipping", price=10, quantity=250, maximum=2)
+        products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
     ]
+
+    # Create promotion catalog
+    second_half_price = promotions.SecondHalfPrice("Second Half price!")
+    third_one_free = promotions.ThirdOneFree("Third One Free!")
+    thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
+
+    # Add promotions to products
+    product_list[0].set_promotion(second_half_price)
+    product_list[1].set_promotion(third_one_free)
+    product_list[3].set_promotion(thirty_percent)
 
     best_buy = store.Store(product_list)
     print("\nSetting up resources...")
@@ -58,6 +70,7 @@ class TestPRODUCT:
         """
         assert setup_data.get_all_products()[0] == product
 
+
     def test_create_product_with_invalid_details_negative_quantity(self,
                                                                    setup_data):
         """
@@ -71,6 +84,7 @@ class TestPRODUCT:
         with pytest.raises(ValueError,
                            match="Quantity must be a int"):
             setup_data.get_products()[0].set_quantity(-10000)
+
 
     def test_create_product_with_invalid_details_empty_quantity(self,
                                                                 setup_data):
@@ -86,6 +100,7 @@ class TestPRODUCT:
                            match="Quantity must be a int"):
             setup_data.get_products()[0].set_quantity("")
 
+
     def test_create_product_with_invalid_details_negative_price(self,
                                                                 setup_data):
         """
@@ -100,6 +115,7 @@ class TestPRODUCT:
                            match="Price must be a float"):
             setup_data.get_products()[0].set_price(-10000)
 
+
     def test_create_product_with_invalid_details_empty_price(self,
                                                              setup_data):
         """
@@ -113,6 +129,7 @@ class TestPRODUCT:
         with pytest.raises(ValueError,
                            match="Price must be a float"):
             setup_data.get_products()[0].set_price("")
+
 
     @pytest.mark.parametrize("product",
                              [
@@ -133,6 +150,7 @@ class TestPRODUCT:
         setup_data.get_all_products()[0].set_quantity(0)
         assert product not in setup_data.get_all_products()
 
+
     def test_product_purchase_check_final_quantity(self, setup_data):
         """
         Test product quantity after a purchase.
@@ -145,6 +163,7 @@ class TestPRODUCT:
         (setup_data.get_all_products()[0]
          .set_quantity(setup_data.get_all_products()[0].get_quantity() - 50))
         assert setup_data.get_all_products()[0].get_quantity() == 50
+
 
     @pytest.mark.parametrize("product",
                              [
@@ -167,6 +186,7 @@ class TestPRODUCT:
                                  "than what exists\n"):
             setup_data.validate_order([(product, 101)])
 
+
     @pytest.mark.parametrize("product",
                              [
                                  products.LimitedProduct("Shipping", price=10,
@@ -180,6 +200,7 @@ class TestPRODUCT:
                                  "The maximum order is 2\n"):
             setup_data.validate_order([(product, 3)])
 
+
     @pytest.mark.parametrize("product",
                              [
                                  products.LimitedProduct("Shipping", price=10,
@@ -191,3 +212,19 @@ class TestPRODUCT:
         setup_data.validate_order([(product, 2)])
         setup_data.order([(product, 2)])
         assert product.get_quantity() == 248
+
+
+    def test_buying_with_promotion_second_half_price(self, setup_data):
+        total_cost = setup_data.order([(setup_data.get_products()[0], 6)])
+        assert total_cost == 6525
+
+    def test_buying_with_promotion_third_one_free(self, setup_data):
+        total_cost = setup_data.order([(setup_data.get_products()[1], 7)])
+        assert total_cost == 1250
+
+    def test_buying_with_promotion_thirty_percent(self, setup_data):
+        total_cost = setup_data.order([(setup_data.get_products()[3], 5)])
+        assert total_cost == 437.5
+
+
+
