@@ -69,7 +69,6 @@ class TestPRODUCT:
         """
         assert setup_data.get_all_products()[0] == product
 
-
     def test_create_product_with_invalid_details_negative_quantity(self,
                                                                    setup_data):
         """
@@ -83,7 +82,6 @@ class TestPRODUCT:
         with pytest.raises(ValueError,
                            match="Quantity must be a int"):
             setup_data.get_products()[0].set_quantity(-10000)
-
 
     def test_create_product_with_invalid_details_empty_quantity(self,
                                                                 setup_data):
@@ -99,7 +97,6 @@ class TestPRODUCT:
                            match="Quantity must be a int"):
             setup_data.get_products()[0].set_quantity("")
 
-
     def test_create_product_with_invalid_details_negative_price(self,
                                                                 setup_data):
         """
@@ -114,7 +111,6 @@ class TestPRODUCT:
                            match="Price must be a float"):
             setup_data.get_products()[0].set_price(-10000)
 
-
     def test_create_product_with_invalid_details_empty_price(self,
                                                              setup_data):
         """
@@ -128,7 +124,6 @@ class TestPRODUCT:
         with pytest.raises(ValueError,
                            match="Price must be a float"):
             setup_data.get_products()[0].set_price("")
-
 
     @pytest.mark.parametrize("product",
                              [
@@ -149,7 +144,6 @@ class TestPRODUCT:
         setup_data.get_all_products()[0].set_quantity(0)
         assert product not in setup_data.get_all_products()
 
-
     def test_product_purchase_check_final_quantity(self, setup_data):
         """
         Test product quantity after a purchase.
@@ -162,7 +156,6 @@ class TestPRODUCT:
         (setup_data.get_all_products()[0]
          .set_quantity(setup_data.get_all_products()[0].get_quantity() - 50))
         assert setup_data.get_all_products()[0].get_quantity() == 50
-
 
     @pytest.mark.parametrize("product",
                              [
@@ -185,7 +178,6 @@ class TestPRODUCT:
                                  "than what exists\n"):
             setup_data.validate_order([(product, 101)])
 
-
     @pytest.mark.parametrize("product",
                              [
                                  products.LimitedProduct("Shipping", price=10,
@@ -198,7 +190,6 @@ class TestPRODUCT:
                            match="Error while making order! "
                                  "The maximum order is 2\n"):
             setup_data.validate_order([(product, 3)])
-
 
     @pytest.mark.parametrize("product",
                              [

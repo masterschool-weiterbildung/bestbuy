@@ -109,8 +109,7 @@ class Store:
                 aggregated[product] += order
 
         for product in aggregated:
-            if isinstance(product, LimitedProduct) and aggregated[
-                product] > product.get_maximum():
+            if isinstance(product, LimitedProduct) and aggregated[product] > product.get_maximum():
                 raise ValueError(
                     f"Error while making order! The maximum order is {product.get_maximum()}\n")
 

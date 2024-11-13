@@ -9,8 +9,6 @@ def setup_data():
     mac = products.Product("MacBook Air M2", price=1450, quantity=100)
     bose = products.Product("Bose QuietComfort Earbuds", price=250,
                             quantity=500)
-    pixel = products.LimitedProduct("Google Pixel 7", price=500, quantity=250,
-                                    maximum=1)
 
     best_buy = store.Store([mac, bose])
 
@@ -54,4 +52,4 @@ class TestMagicMethods:
                              ]
                              )
     def test_not_in_store(self, product, setup_data):
-        assert not product in setup_data.get_products()
+        assert product not in setup_data.get_products()
