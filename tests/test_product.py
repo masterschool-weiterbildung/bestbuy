@@ -4,7 +4,6 @@ import products
 import promotions
 
 import store
-from promotions import SecondHalfPrice
 
 
 @pytest.fixture
