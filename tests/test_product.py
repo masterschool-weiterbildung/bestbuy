@@ -203,7 +203,6 @@ class TestPRODUCT:
         setup_data.order([(product, 2)])
         assert product.get_quantity() == 248
 
-
     def test_buying_with_promotion_second_half_price(self, setup_data):
         total_cost = setup_data.order([(setup_data.get_products()[0], 6)])
         assert total_cost == 6525
@@ -215,6 +214,7 @@ class TestPRODUCT:
     def test_buying_with_promotion_thirty_percent(self, setup_data):
         total_cost = setup_data.order([(setup_data.get_products()[3], 5)])
         assert total_cost == 437.5
+
 
 
 
