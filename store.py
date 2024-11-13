@@ -1,22 +1,22 @@
-from products import Product
+from products import Product, LimitedProduct, NonStockedProduct
+from collections import defaultdict
 
 
 class Store:
     """
-    A class to represent a store with a collection of products.
+    Represents a store that manages a collection of products and handles orders.
 
-    Instance Variable:
-              __products (list[Product]): Private instance variables, a list
-              of Product objects available in the store.
+    Attributes:
+        __products (list[Product]): A private list containing the store's products.
     """
 
     def __init__(self, product_list: list[Product]):
         """
-        Initializes a Store object with a list of products.
+        Initializes the Store with a list of products.
 
         Parameter:
             product_list (list[Product]): A list of Product objects to
-            initialize the store's inventory. (Private Instance)
+                                          initialize the store's inventory.
         """
         self.__products: list = product_list
 
@@ -25,7 +25,7 @@ class Store:
         Adds a product to the store's inventory.
 
         Parameter:
-            product (Product): The product to add to the inventory.
+            product (Product): The product to add to the store's inventory.
         """
         self.get_products().append(product)
 
@@ -34,7 +34,7 @@ class Store:
         Removes a product from the store's inventory.
 
         Parameter:
-            product (Product): The product to remove from the inventory.
+            product (Product): The product to remove from the store's inventory.
         """
         self.get_products().remove(product)
 
@@ -43,7 +43,7 @@ class Store:
         Calculates the total quantity of all products in the store.
 
         Returns:
-            int: The total quantity of all products in the store.
+            int: The sum of quantities for all products in the store.
         """
         total_quantities: int = 0
         for product in self.get_products():
@@ -55,9 +55,9 @@ class Store:
         Retrieves a list of all active products in the store.
 
         Returns:
-            list[Product]: A list of active Product objects.
+            list[Product]: A list of active products in the store.
         """
-        total_products: Product = []
+        total_products: list[Product] = list()
         for product in self.get_products():
             if product.is_active():
                 total_products.append(product)
@@ -65,59 +65,72 @@ class Store:
 
     def order(self, shopping_list: list[tuple[Product, int]]) -> float:
         """
-        Places an order for a list of products and quantities, updating
-        product quantities.
+         Processes an order based on the provided shopping list, calculating
+         the total cost.
 
-        Parameter:
-            shopping_list (list[tuple[Product, int]]): A list of tuples where
-            each tuple contains a Product and the quantity ordered.
+         Parameter:
+             shopping_list (list[tuple[Product, int]]):
+                                A list of tuples where each tuple consists of
+                                a Product and the quantity to be purchased.
 
-        Returns:
-            float: The total cost of the order.
-        """
+         Returns:
+             float: The total cost of the order.
+         """
         total_cost: float = 0.0
         for product, order in shopping_list:
-            total_cost += product.get_price() * order
-            product.buy(order)
+            total_cost += product.buy(order)
         return total_cost
 
     def validate_order(self,
                        shopping_list: list[tuple[Product, int]]) -> None:
+
         """
-        Validates that the quantities in the order are available in stock.
+        Validates the provided shopping list to ensure it meets quantity
+        and order limits.
 
         Parameter:
-            shopping_list (list[tuple[Product, int]]): A list of tuples where
-            each tuple contains a Product and the quantity ordered.
+            shopping_list (list[tuple[Product, int]]):
+                                A list of tuples, each containing a Product
+                                and the quantity to be ordered.
 
         Raises:
-            ValueError: If the requested quantity exceeds available
-                        stock for any product.
+            ValueError: If any product quantity exceeds the available quantity
+            or maximum order limit.
         """
+        aggregated = defaultdict(int)
+
         for product, order in shopping_list:
-            if product.get_quantity() < order:
+            if not isinstance(product,
+                              NonStockedProduct) and product.get_quantity() < order:
                 raise ValueError(
                     "Error while making order! Quantity larger than what exists\n")
 
+            if isinstance(product, LimitedProduct):
+                aggregated[product] += order
+
+        for product in aggregated:
+            if isinstance(product, LimitedProduct) and aggregated[product] > product.get_maximum():
+                raise ValueError(
+                    f"Error while making order! The maximum order is {product.get_maximum()}\n")
+
     def get_products(self):
         """
-        Retrieves the store's list of products.
+        Retrieves the store's product list.
 
         Returns:
-            list[Product]: The store's product inventory.
+            list[Product]: The list of products in the store's inventory.
         """
         return self.__products
 
     def set_products(self, products):
         """
-        Sets the store's inventory with a new list of products.
+        Sets the store's product list to a new list of products.
 
         Parameter:
-            products (list[Product]): A new list of products.
+            products (list[Product]): The new list of products to set.
 
         Raises:
-            ValueError: If the provided products argument is not a non-empty
-            list of Product objects.
+            ValueError: If products is not a list or is empty.
         """
         if isinstance(products, list) and products:
             self.__products = products
