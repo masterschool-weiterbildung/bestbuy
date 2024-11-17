@@ -49,8 +49,6 @@ def print_products(best_buy: Store) -> dict:
     Parameter:
         best_buy (Store): The store instance with products.
 
-    Returns:
-        dict: A dictionary mapping product numbers to product instances.
     """
     list_products_for_order = {}
     print("------")
@@ -68,9 +66,6 @@ def make_order(best_buy: Store):
 
     Parameter:
         best_buy (Store): The store instance with products.
-
-    Returns:
-        dict: A dictionary mapping product numbers to product instances.
     """
     dict_products_for_order: dict = print_products(best_buy)
     print("When you want to finish order, enter empty text.")
