@@ -26,7 +26,7 @@ This system allows the application of different promotions to products. The core
 
 Each product can have associated promotions, and the total price of an order reflects the discount, if applicable.
 
-#### **Store**
+### **Store**
 Represents a store that manages products and processes orders. It includes:
 - Adding, removing, and retrieving products.
 - Calculating total quantities and total costs of orders.
@@ -55,7 +55,7 @@ Represents a store that manages products and processes orders. It includes:
    pip install -r requirements.txt  
    ```  
 
-3**Run the application**:  
+3. **Run the application**:  
    ```bash  
    python main.py  
    ```  
